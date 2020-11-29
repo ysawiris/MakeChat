@@ -5,6 +5,8 @@ $(document).ready(() => {
 	let currentUser;
 	// Get the online users from the server
 	socket.emit("get online users");
+
+	socket.emit("update channels");
 	//Each user should be in the general channel by default.
 	socket.emit("user changed channel", "General");
 
@@ -90,6 +92,15 @@ $(document).ready(() => {
 	// Add the new channel to the channels list (Fires for all clients)
 	socket.on("new channel", (newChannel) => {
 		$(".channels").append(`<div class="channel">${newChannel}</div>`);
+	});
+
+	socket.on("update channels", (channels) => {
+		for (channel in channels) {
+			if (channel == "General") {
+			} else {
+				$(".channels").append(`<div class="channel">${channel}</div>`);
+			}
+		}
 	});
 
 	// Make the channel joined the current channel. Then load the messages.

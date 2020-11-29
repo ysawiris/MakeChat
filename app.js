@@ -2,6 +2,12 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
+const exphbs = require("express-handlebars");
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
+
+//Establish your public folder
+app.use("/public", express.static("public"));
 
 //Socket.io
 const io = require("socket.io")(server);
@@ -14,13 +20,6 @@ io.on("connection", (socket) => {
 	require("./sockets/chat.js")(io, socket, onlineUsers, channels);
 	console.log("🔌 New user connected! 🔌");
 });
-
-const exphbs = require("express-handlebars");
-app.engine("handlebars", exphbs());
-app.set("view engine", "handlebars");
-
-//Establish your public folder
-app.use("/public", express.static("public"));
 
 app.get("/", (req, res) => {
 	res.render("layouts/main.handlebars");
